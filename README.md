@@ -119,3 +119,6 @@ Con esta práctica he podido comparar LINQ y DataFrames utilizando los mismos da
 En mis pruebas, LINQ ha obtenido un mejor tiempo de ejecución que DataFrame. La principal diferencia está en que LINQ trabaja directamente sobre los objetos cargados, mientras que DataFrame requiere una transformación previa de los datos.
 
 También he utilizado `Task.WhenAll` para intentar mejorar la carga de los ficheros independientes y he separado la aplicación en diferentes responsabilidades para facilitar su mantenimiento.
+
+### Repositorio GitHub:
+https://github.com/ByDiegox78/AccidenteDeMadrid/tree/main
