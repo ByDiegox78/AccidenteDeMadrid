@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "DqeBbgXBYT8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Diego\\Desktop\\2ºDAW\\Entorno Servidor\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Diego\\.nuget\\packages\\apache.arrow\\14.0.2\\apache.arrow.14.0.2.nupkg.sha512",
+    "C:\\Users\\Diego\\.nuget\\packages\\csvhelper\\33.1.0\\csvhelper.33.1.0.nupkg.sha512",
+    "C:\\Users\\Diego\\.nuget\\packages\\microsoft.data.analysis\\0.23.0\\microsoft.data.analysis.0.23.0.nupkg.sha512",
+    "C:\\Users\\Diego\\.nuget\\packages\\microsoft.ml.dataview\\5.0.0\\microsoft.ml.dataview.5.0.0.nupkg.sha512",
+    "C:\\Users\\Diego\\.nuget\\packages\\system.numerics.tensors\\9.0.4\\system.numerics.tensors.9.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}
