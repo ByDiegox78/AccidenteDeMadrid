@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\oms04\\Desktop\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj": {}
+    "C:\\Users\\Diego\\Desktop\\2ºDAW\\Entorno Servidor\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj": {}
   },
   "projects": {
-    "C:\\Users\\oms04\\Desktop\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj": {
+    "C:\\Users\\Diego\\Desktop\\2ºDAW\\Entorno Servidor\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\oms04\\Desktop\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj",
+        "projectUniqueName": "C:\\Users\\Diego\\Desktop\\2ºDAW\\Entorno Servidor\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj",
         "projectName": "AccidenteDeMadrid",
-        "projectPath": "C:\\Users\\oms04\\Desktop\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj",
-        "packagesPath": "C:\\Users\\oms04\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\oms04\\Desktop\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\obj\\",
+        "projectPath": "C:\\Users\\Diego\\Desktop\\2ºDAW\\Entorno Servidor\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid.csproj",
+        "packagesPath": "C:\\Users\\Diego\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Diego\\Desktop\\2ºDAW\\Entorno Servidor\\AccidenteDeMadrid\\AccidenteDeMadrid\\AccidenteDeMadrid\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\oms04\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Diego\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -69,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

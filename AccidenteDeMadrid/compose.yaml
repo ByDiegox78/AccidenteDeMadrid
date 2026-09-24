@@ -1,0 +1,13 @@
+﻿services:
+  accidentedemadrid:
+    image: accidentedemadrid
+    build:
+      context: .
+      dockerfile: AccidenteDeMadrid/Dockerfile
+
+  accidentedemadrid-1:
+    image: accidentedemadrid-1
+    build:
+      context: .
+      dockerfile: AccidenteDeMadrid/Dockerfile
+
