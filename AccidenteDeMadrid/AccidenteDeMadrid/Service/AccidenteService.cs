@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
 using AccidenteDeMadrid.Enums;
 using AccidenteDeMadrid.Models;
+using AccidenteDeMadrid.Repository;
+using Microsoft.Data.Analysis;
 using static System.Console;
 
 namespace AccidenteDeMadrid.Service;
 
-public class AccidenteService : IAccidenteService {
-    
+public class AccidenteService() : IAccidenteService {
+    private static readonly string[] DiasSemana = { "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado" };
     public void ConsultasLinq(IEnumerable<Accidente> accidentes) {
         var crono = new Stopwatch();
         crono.Start();
@@ -19,7 +21,7 @@ public class AccidenteService : IAccidenteService {
         var top = accidentes
             .GroupBy(a => a.Distrito)
             .Select(a => new { b = a.Key, c = a.Count() })
-            .OrderByDescending(a => a.b)
+            .OrderByDescending(a => a.c)
             .Take(5);
         foreach (var item in top) {
             WriteLine($"Distrito: {item.b} Accidente: {item.c}");
@@ -27,15 +29,31 @@ public class AccidenteService : IAccidenteService {
         
         WriteLine("3: Accidente por tipos");
         var tipo = accidentes
-            .GroupBy(a => a.TipoAccidente);
+            .GroupBy(a => a.TipoAccidente)
+            .Select(g => new { Tipo = g.Key, Total = g.Count() })
+            .OrderByDescending(x => x.Total);
+        foreach (var item in tipo) {
+            WriteLine($"{item.Tipo}: {item.Total}");
+        }
         
         WriteLine("4: Accidente por estado meteorologico");
         var accidentePorEstado = accidentes
-            .GroupBy(a => a.TipoAccidente);
+            .GroupBy(a => a.TipoAccidente)
+            .Select(g => new { Tipo = g.Key, Total = g.Count() })
+            .OrderByDescending(x => x.Total);
+        foreach (var item in accidentePorEstado) {
+            WriteLine($"{item.Tipo}: {item.Total}");
+        }
         
         WriteLine("5: Accidente por sexo");
         var sexo = accidentes
-            .GroupBy(a => a.Sexo);
+            .GroupBy(a => a.Sexo)
+            .Select(g => new { Tipo = g.Key, Total = g.Count() })
+            .OrderByDescending(x => x.Total);
+        foreach (var item in sexo) {
+            WriteLine($"{item.Tipo}: {item.Total}");
+        }
+        
         
         WriteLine("6: Accidente por rango de edad");
         var rango = accidentes
@@ -50,25 +68,31 @@ public class AccidenteService : IAccidenteService {
         
         WriteLine("7: Positivo en Alcohol");
         var positivoAlcohol = accidentes
-            .Where(a => a.PositivoAlcohol);
-        foreach (var item in positivoAlcohol) {
-            WriteLine($"Positivo Alcohol: ${item.PositivoAlcohol}");
-        }
+            .Where(a => a.PositivoAlcohol)
+            .Count();
+        WriteLine($"Cantidad de positivos en alcohol: {positivoAlcohol}");
         
         WriteLine("8: Positivo en Drogas");
         var positivoDrogas = accidentes
-            .Where(a => a.PositivoDroga);
-        foreach (var item in positivoDrogas) {
-            WriteLine($"Positivo Droga: ${item.PositivoDroga}");
-        }
+            .Where(a => a.PositivoDroga)
+            .Count();
+        WriteLine($"Cantidad de positivos en alcohol: {positivoDrogas}");
+        
         
         WriteLine("9: Accidente por dia de la semana");
         var dia = accidentes
-            .GroupBy(a => a.Fecha.Day);
+            .GroupBy(a => a.Fecha.DayOfWeek)
+            .Select(g => new { Dia = g.Key, Total = g.Count() });
+        foreach (var item in dia) WriteLine($"{item.Dia}- {item.Total}");
+        
         
         WriteLine("10: Accidente por mes");
         var mes = accidentes
-            .GroupBy(a => a.Fecha.Month);
+            .GroupBy(a => a.Fecha.Month)
+            .Select(g => new { Mes = g.Key, Total = g.Count() })
+            .OrderBy(x => x.Mes);
+        foreach (var item in mes) WriteLine($"{item.Mes}- {item.Total}");
+        
         
         WriteLine("11: Hora con mas accidentes");
         var hora = accidentes
@@ -80,7 +104,7 @@ public class AccidenteService : IAccidenteService {
         
         WriteLine("12 Lesiones mas frecuentes");
         var lesion = accidentes
-            .GroupBy(a => a.TipoAccidente)
+            .GroupBy(a => a.Lesividad)
             .Select(g => new { TipoAccidente = g.Key, Total = g.Count() })
             .OrderByDescending(x => x.Total);
         foreach (var item in lesion) {
@@ -247,16 +271,203 @@ public class AccidenteService : IAccidenteService {
             .OrderBy(x => x.Año);
 
         foreach (var item in peatonesPorAño) {
-            Console.WriteLine($"Año {item.Año} -> {item.TotalPeatones} peatones de {item.TotalGeneral} implicados");
+            WriteLine($"Año {item.Año} -> {item.TotalPeatones} peatones de {item.TotalGeneral} implicados");
         }
-
-
-
-
-
+        
     }
+    public void ConsultasDataFrame(IEnumerable<Accidente> datos) {
+        var df = ConstruirDataFrame(datos);
+        WriteLine("1: Total de accidentes");
+        var total = df.Rows.Count;
+        WriteLine($"Total de accidentes: {total}");
+        
+        WriteLine("2: Top 5 de accidentes por distrito");
+        var distrito2 = df
+            .GroupBy("Distrito")
+            .Count("numExpediente")
+            .OrderByDescending("numExpediente")
+            .Head(5);
+        
+        WriteLine("3: Accidente por tipos");
+        var tipo = df
+            .GroupBy("TipoAccidente")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
+        
+        WriteLine("4: Accidente por estado meteorologico");
+        var meteo = df
+            .GroupBy("EstadoMeteorologico")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
+        
+        WriteLine("5: Accidente por sexo");
+        var sexo = df
+            .GroupBy("Sexo")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
+        
+        WriteLine("6: Accidente por rango de edad");
+        var rango = df
+            .GroupBy("RangoEdad")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
+        
+        WriteLine("7: Positivo en Alcohol");
+        var row = (BooleanDataFrameColumn)df.Columns["PositivoAlcohol"];
+        var cantidad = row.Count(row => row == true);
+        
+        WriteLine("8: Positivo en Drogas");
+        var row2 = (BooleanDataFrameColumn)df.Columns["PositivoDroga"];
+        var cantidad2 = row2.Count(row => row == true);
+        
+        WriteLine("9: Accidente por dia de la semana");
+        
+        
+        
+        WriteLine("10: Accidente por mes");
+       
+        
+        
+        WriteLine("11: Hora con mas accidentes");
+        
+        WriteLine("12 Lesiones mas frecuentes");
+        var lesion = df
+            .GroupBy("Lesividad")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
+        
+        
+        WriteLine("13: Tipo de vehiculo mas implicado");
+        var tipoAccidente = df
+            .GroupBy("TipoVehiculo")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente")
+            .Head(1);
+        
+        WriteLine("14: Accidentes con peatones");
+        var columna = (StringDataFrameColumn)df["TipoPersona"];
+        var filtrados = df.Filter(
+            columna.ElementwiseEquals("Peatón")
+        );
+        
+        WriteLine("15: Proporcion Hombre/Mujer");
+        var proporcionHombreMujer =df
+            .GroupBy("Sexo")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
+        
+        WriteLine("16: Distrito con mas peatones");
+        var persona16 = (StringDataFrameColumn)df["TipoPersona"];
+        var peatones16 = df.Filter(persona16.ElementwiseEquals("Peatón"));
+        var distrito = peatones16
+            .GroupBy("Distrito")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente")
+            .Head(1);
+        
+        
+        WriteLine("17: Fin de semana vs entre semana");
+        var fechas = (PrimitiveDataFrameColumn<DateOnly>)df["Fecha"];
+        var dias = fechas.ToList().Distinct().Count();
+        var media = (double)df.Rows.Count / dias;
+        WriteLine($"Media: {media}");
+        
+        WriteLine("19: Accidentes por alcohol y drogra");
+        var alcohol = ((BooleanDataFrameColumn)df["PositivoAlcohol"])
+            .ElementwiseEquals(true);
+        var droga = ((BooleanDataFrameColumn)df["PositivoDroga"])
+            .ElementwiseEquals(true);
+        var conjunto = df.Filter(alcohol & droga);
+        
+        
+        WriteLine("20: Rangos de edad mas vulnerables");
+        var persona = (StringDataFrameColumn)df["TipoPersona"];
+        var peatones = df.Filter(
+            persona.ElementwiseEquals("Peatón")
+        );
+        var rangos = peatones
+            .GroupBy("RangoEdad")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
 
-    public void ConsultasDataFrame() {
-        throw new NotImplementedException();
+        
+        WriteLine("21: Distritos con mas positivos en alcohol");
+        var positivo = ((BooleanDataFrameColumn)df["PositivoAlcohol"])
+            .ElementwiseEquals(true);
+        var distritosAlcohol =  df
+            .Filter(positivo) 
+            .GroupBy("Distrito")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
+       
+        WriteLine("22:Accidentes por codigo de distrito");
+        var codigo = df
+            .GroupBy("CodDistrito")
+            .Count("NumExpediente")
+            .OrderByDescending("NumExpediente");
+        
+        
+        WriteLine("23: Accidentes por año");
+        var fechas23 = (PrimitiveDataFrameColumn<DateOnly>)df["Fecha"];
+        var años = new Dictionary<int, int>();
+        foreach (var valor in fechas23) {
+            var fecha = (DateOnly)valor;
+            var año = fecha.Year;
+            if (!años.TryAdd(año, 1))
+                años[año]++;
+        }
+        var resultado = años
+            .OrderByDescending(x => x.Value);
+        
+        
+        WriteLine("24: Evolucion mensual por año");
+        
+       
+        
+        
+        WriteLine("25: Distrito con mas accidentes por año");
+        
+        
+        WriteLine("26: Tendencia de Alcohol por año");
+       
+        
+        
+        WriteLine("27: Comparativa fin de semana vs entre semana por año");
+        
+        WriteLine("28: Hora pico por año");
+       
+        
+        WriteLine("29: Lesión más frecuente por año");
+       
+        
+        WriteLine("30: Evolución de peatones por año");
+        
+
+        
+        
+        
+    }
+    private DataFrame ConstruirDataFrame(IEnumerable<Accidente> datos) {
+        var lista = datos.ToList();
+        return new DataFrame(
+            new StringDataFrameColumn("NumExpediente", lista.Select(a => a.NumExpediente)),
+            new PrimitiveDataFrameColumn<DateOnly>("Fecha", lista.Select(a => a.Fecha) ),            
+            new PrimitiveDataFrameColumn<TimeOnly>("Hora", lista.Select(a => a.Hora) ),            
+            new StringDataFrameColumn("Localizacion", lista.Select(a => a.Localizacion ?? string.Empty)),
+            new PrimitiveDataFrameColumn<int>("CodDistrito", lista.Select(a => a.CodigoDistrito)),
+            new StringDataFrameColumn("Distrito", lista.Select(a => a.Distrito)),
+            new StringDataFrameColumn("TipoAccidente", lista.Select(a => a.TipoAccidente.ToString())),
+            new StringDataFrameColumn("EstadoMeteorologico", lista.Select(a => a.EstadoMetereologico)),
+            new StringDataFrameColumn("TipoVehiculo", lista.Select(a => a.TipoVehiculo)),
+            new StringDataFrameColumn("TipoPersona", lista.Select(a => a.TipoPersona)),
+            new StringDataFrameColumn("RangoEdad", lista.Select(a => a.RangoEdad)),
+            new StringDataFrameColumn("Sexo", lista.Select(a => a.Sexo.ToString())),
+            new PrimitiveDataFrameColumn<int>("CodLesividad", lista.Select(a => a.CodLesividad)),
+            new StringDataFrameColumn("Lesividad", lista.Select(a => a.Lesividad)),
+            new PrimitiveDataFrameColumn<double>("CoordenadaXUtm", lista.Select(a => a.CoordenadaXUtm)),
+            new PrimitiveDataFrameColumn<double>("CoordenadaYUtm", lista.Select(a => a.CoordenadaYUtm)),
+            new BooleanDataFrameColumn("PositivoAlcohol", lista.Select(a => a.PositivoAlcohol)),
+            new BooleanDataFrameColumn("PositivoDroga", lista.Select(a => a.PositivoDroga))
+        );
     }
 }

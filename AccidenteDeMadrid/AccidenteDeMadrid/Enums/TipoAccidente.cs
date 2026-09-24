@@ -1,5 +1,18 @@
 ﻿namespace AccidenteDeMadrid.Enums;
 
 public enum TipoAccidente {
-    ColisionDoble, ColisionMultiple, Alcance, ChoqueContraObstaculoOElemento, Atropello, Vuelvo, Caida, OtrasCausas
+    NoAsignado,
+    ColisionFrontoLateral,
+    ColisionFrontal,
+    ColisionLateral,
+    ColisionMultiple,
+    Alcance,
+    ChoqueContraObstaculoFijo,
+    AtropelloPersona,
+    AtropelloAnimal,
+    Vuelco,
+    SoloSalidaDeLaVia,
+    Caida,
+    Otro,
+    Despenamiento
 }

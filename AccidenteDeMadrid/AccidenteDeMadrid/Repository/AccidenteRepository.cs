@@ -7,6 +7,7 @@ using CsvHelper.Configuration;
 namespace AccidenteDeMadrid.Repository;
 
 public class AccidenteRepository : IAccidenteRepository {
+    
     private readonly CsvConfiguration _config = new(CultureInfo.InvariantCulture) {
         Delimiter = ";",
         HasHeaderRecord = true,
